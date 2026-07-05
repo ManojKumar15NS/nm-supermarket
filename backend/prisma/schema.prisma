@@ -1,0 +1,287 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Staff {
+  id                 Int         @id @default(autoincrement())
+  username           String      @unique
+  passwordHash       String
+  name               String
+  phone              String
+  assignedLocationId String      @default("L001")
+  status             String      @default("ACTIVE") // ACTIVE, SUSPENDED
+  roleId             Int
+  role               Role        @relation(fields: [roleId], references: [id])
+  shifts             Shift[]
+  invoices           Invoice[]
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+}
+
+model Role {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique // Admin, Manager, Cashier, Inventory Staff
+  description String
+  permissions Permission[]
+  staff       Staff[]
+}
+
+model Permission {
+  id     Int    @id @default(autoincrement())
+  roleId Int
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  module String // POS, Inventory, Customers, Purchases, Reports, Coupons, Staff, Settings
+  action String // view, add, edit, delete
+}
+
+model Product {
+  id                 Int           @id @default(autoincrement())
+  itemCode           String        @unique // Barcode
+  name               String
+  printName          String
+  description        String?
+  ingredients        String?
+  nutritionInfo      String?
+  netWeight          Float?
+  netWeightUnit      String?
+  categoryId         Int
+  category           Category      @relation(fields: [categoryId], references: [id])
+  brandId            Int
+  brand              Brand         @relation(fields: [brandId], references: [id])
+  mrp                Int           // paise
+  sellingPrice       Int           // paise
+  purchasePrice      Int           // paise
+  landingCost        Int           // paise
+  purchaseTaxPct     Float         @default(0)
+  salesTaxPct        Float         @default(0) // GST
+  isTaxInclusive     Boolean       @default(true)
+  cessPct            Float         @default(0)
+  minOrderQty        Int           @default(1)
+  qtyOnHand          Int           @default(0)
+  manageBatch        Boolean       @default(false)
+  status             String        @default("ACTIVE") // ACTIVE, DELETED
+  variants           Variant[]
+  batches            Batch[]
+  stockLedgers       StockLedger[]
+  invoiceItems       InvoiceItem[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
+
+model Variant {
+  id           Int           @id @default(autoincrement())
+  productId    Int
+  product      Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  barcode      String        @unique
+  name         String
+  price        Int           // paise
+  qtyOnHand    Int           @default(0)
+  invoiceItems InvoiceItem[]
+}
+
+model Batch {
+  id          Int       @id @default(autoincrement())
+  productId   Int
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  batchNumber String
+  mfgDate     DateTime?
+  expiryDate  DateTime?
+  qtyOnHand   Int       @default(0)
+}
+
+model Category {
+  id            Int           @id @default(autoincrement())
+  name          String        @unique
+  products      Product[]
+  subCategories SubCategory[]
+}
+
+model SubCategory {
+  id         Int      @id @default(autoincrement())
+  name       String
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model Brand {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  products  Product[]
+  subBrands SubBrand[]
+}
+
+model SubBrand {
+  id      Int    @id @default(autoincrement())
+  name    String
+  brandId Int
+  brand   Brand  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+}
+
+model Supplier {
+  id             Int     @id @default(autoincrement())
+  name           String
+  contactPerson  String?
+  phone          String?
+  email          String?
+  gstin          String?
+  address        String?
+  openingBalance Int     @default(0) // paise
+}
+
+model StockLedger {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id])
+  quantity   Int
+  type       String   // SALE, PURCHASE, ADJUSTMENT, TRANSFER, RETURN
+  referenceId String?
+  locationId String   @default("L001")
+  timestamp  DateTime @default(now())
+  reason     String?
+}
+
+model StockTransfer {
+  id           Int      @id @default(autoincrement())
+  productId    Int
+  fromLocation String
+  toLocation   String
+  quantity     Int
+  status       String   @default("COMPLETED")
+  timestamp    DateTime @default(now())
+}
+
+model StockAdjustment {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  quantity  Int      // positive or negative
+  reasonCode String   // expired, damaged, theft, recount
+  timestamp DateTime @default(now())
+}
+
+model Customer {
+  id                  Int                  @id @default(autoincrement())
+  name                String
+  phone               String               @unique
+  email               String?
+  address             String?
+  gstin               String?
+  openingBalance      Int                  @default(0) // paise
+  loyaltyPoints       Int                  @default(0)
+  invoices            Invoice[]
+  loyaltyTransactions LoyaltyTransaction[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+}
+
+model Invoice {
+  id                   Int           @id @default(autoincrement())
+  invoiceNumber        String        @unique
+  locationId           String        @default("L001")
+  channel              String        @default("COUNTER_1") // COUNTER_1, DELIVERY
+  customerId           Int
+  customer             Customer      @relation(fields: [customerId], references: [id])
+  staffId              Int
+  staff                Staff         @relation(fields: [staffId], references: [id])
+  subtotal             Int           // paise
+  discount             Int           // paise
+  taxAmount            Int           // paise
+  grandTotal           Int           // paise
+  loyaltyPointsEarned  Int           @default(0)
+  loyaltyPointsRedeemed Int           @default(0)
+  couponId             Int?
+  coupon               Coupon?       @relation(fields: [couponId], references: [id])
+  status               String        @default("COMPLETED") // COMPLETED, RETURNED
+  payments             Payment[]
+  invoiceItems         InvoiceItem[]
+  createdAt            DateTime      @default(now())
+}
+
+model InvoiceItem {
+  id           Int      @id @default(autoincrement())
+  invoiceId    Int
+  invoice      Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  productId    Int
+  product      Product  @relation(fields: [productId], references: [id])
+  variantId    Int?
+  variant      Variant? @relation(fields: [variantId], references: [id])
+  qty          Int
+  mrp          Int      // paise
+  sellingPrice Int      // paise
+  discount     Int      // paise
+  taxPct       Float
+  taxAmount    Int      // paise
+  netAmount    Int      // paise
+}
+
+model Payment {
+  id          Int      @id @default(autoincrement())
+  invoiceId   Int
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  paymentMode String   // CASH, CARD, UPI, BANK, WALLET, CHEQUE, CREDIT
+  amount      Int      // paise
+  status      String   @default("SUCCESS")
+  timestamp   DateTime @default(now())
+}
+
+model Coupon {
+  id                 Int       @id @default(autoincrement())
+  code               String    @unique
+  discountType       String    // FLAT, PERCENTAGE
+  discountValue      Int       // paise if flat, percentage value if percentage
+  minBillValue       Int       @default(0) // paise
+  startDate          DateTime
+  endDate            DateTime
+  usageLimit         Int       @default(99999)
+  usedCount          Int       @default(0)
+  applicableScope    String    @default("ALL") // ALL, CATEGORY, PRODUCT
+  applicableScopeId  Int?
+  invoices           Invoice[]
+}
+
+model LoyaltyTransaction {
+  id          Int      @id @default(autoincrement())
+  customerId  Int
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  points      Int      // positive for earn, negative for redeem
+  type        String   // EARN, REDEEM, EXPIRED
+  referenceId String?  // Invoice number or note
+  timestamp   DateTime @default(now())
+}
+
+model LoyaltySettings {
+  id                Int      @id @default(autoincrement())
+  earnRate          Float    @default(0.01) // points per Rupee spent (e.g. 0.01 = 1 point per 100 Rs)
+  redemptionRate    Int      @default(100)  // paise value per 1 point (e.g. 100 = 1 Rupee value per point)
+  minPointsToRedeem Int      @default(10)
+  enableExpiry      Boolean  @default(false)
+  expiryDays        Int      @default(365)
+  minBillValue      Int      @default(0)    // paise
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  staffId    Int
+  staffName  String?
+  module     String
+  action     String
+  beforeJson String?
+  afterJson  String?
+  timestamp  DateTime @default(now())
+}
+
+model Shift {
+  id          Int       @id @default(autoincrement())
+  staffId     Int
+  staff       Staff     @relation(fields: [staffId], references: [id])
+  openingCash Int       // paise
+  closingCash Int?      // paise
+  difference  Int?      // paise
+  status      String    @default("OPEN") // OPEN, CLOSED
+  openedAt    DateTime  @default(now())
+  closedAt    DateTime?
+}

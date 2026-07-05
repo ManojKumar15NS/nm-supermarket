@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Font Overrides for Ultra-Clear High-Contrast Retail UI */
+html, body, input, select, textarea, button {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #f1f5f9;
+  color: #0f172a; /* high-contrast dark slate */
+}
+
+/* Make all text inputs and dropdowns ultra clear */
+input, select, textarea {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+input::placeholder {
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+/* Force table cells to be highly visible and bold */
+table th {
+  color: #334155 !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #f8fafc !important;
+}
+
+table td {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+/* Highlighted numbers or amounts */
+.amount-text {
+  font-family: 'Inter', monospace !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em;
+}
+
+/* Strong shadow and button active outlines */
+button {
+  font-weight: 800 !important;
+  letter-spacing: 0.01em;
+  transition: all 0.15s ease-in-out;
+}
+
+button:hover {
+  filter: brightness(0.95);
+}
+
+button:active {
+  transform: scale(0.98);
+}
