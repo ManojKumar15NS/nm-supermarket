@@ -85,13 +85,16 @@ model Variant {
 }
 
 model Batch {
-  id          Int       @id @default(autoincrement())
-  productId   Int
-  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  batchNumber String
-  mfgDate     DateTime?
-  expiryDate  DateTime?
-  qtyOnHand   Int       @default(0)
+  id            Int       @id @default(autoincrement())
+  productId     Int
+  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  batchNumber   String
+  mfgDate       DateTime?
+  expiryDate    DateTime?
+  purchasePrice Int       @default(0)
+  mrp           Int       @default(0)
+  sellingPrice  Int       @default(0)
+  qtyOnHand     Int       @default(0)
 }
 
 model Category {

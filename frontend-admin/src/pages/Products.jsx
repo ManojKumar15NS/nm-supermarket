@@ -551,7 +551,7 @@ function Products() {
                       <tr key={p.id} className="border-b border-slate-100 hover:bg-slate-50/50">
                         <td className="p-4 font-mono text-slate-500">{p.itemCode}</td>
                         <td
-                          className="p-4 font-bold text-indigo-650 hover:underline cursor-pointer"
+                          className="p-4 font-bold text-indigo-600 hover:underline cursor-pointer"
                           onClick={() => handleProductClick(p)}
                         >
                           {p.name}
@@ -777,7 +777,7 @@ function Products() {
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none font-semibold text-slate-600"
                   >
                     {masters?.categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
-                    <option value="ADD_NEW" className="font-bold text-indigo-650">+ Add New Category...</option>
+                    <option value="ADD_NEW" className="font-bold text-indigo-600">+ Add New Category...</option>
                   </select>
                   {selectedCategory === 'ADD_NEW' && (
                     <input
@@ -883,7 +883,7 @@ function Products() {
               
               {/* Product General Pricing overview */}
               <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-                <span className="text-xs font-black uppercase text-indigo-650 tracking-wider block border-b border-slate-100 pb-2">Pricing Master Matrix</span>
+                <span className="text-xs font-black uppercase text-indigo-600 tracking-wider block border-b border-slate-100 pb-2">Pricing Master Matrix</span>
                 
                 <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-xs font-semibold">
                   <div>
@@ -915,7 +915,7 @@ function Products() {
 
               {/* Batches list & batch-wise pricing editor (Screenshot 2 reference) */}
               <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
-                <span className="text-xs font-black uppercase text-indigo-650 tracking-wider block border-b border-slate-100 pb-2">Batch Wise Pricing</span>
+                <span className="text-xs font-black uppercase text-indigo-600 tracking-wider block border-b border-slate-100 pb-2">Batch Wise Pricing</span>
                 
                 {productBatches.length === 0 ? (
                   <p className="text-center text-slate-450 py-6">No pricing batches created. Register a new batch pricing slot below!</p>
@@ -953,7 +953,7 @@ function Products() {
                     </div>
                     <div>
                       <label className="block text-[10px] font-bold text-slate-450 uppercase mb-1">Selling Price (₹)</label>
-                      <input type="number" step="0.01" required value={newBatchSelling} onChange={e => setNewBatchSelling(e.target.value)} className="w-full px-2.5 py-1 bg-white border border-slate-355 rounded text-xs text-center focus:outline-none font-bold text-indigo-650" />
+                      <input type="number" step="0.01" required value={newBatchSelling} onChange={e => setNewBatchSelling(e.target.value)} className="w-full px-2.5 py-1 bg-white border border-slate-355 rounded text-xs text-center focus:outline-none font-bold text-indigo-600" />
                     </div>
                   </div>
                   <div className="flex justify-between items-center pt-2">
@@ -961,7 +961,7 @@ function Products() {
                       <label className="text-[10px] font-bold text-slate-450 uppercase">Initial Quantity:</label>
                       <input type="number" required value={newBatchQty} onChange={e => setNewBatchQty(e.target.value)} className="w-20 px-2 py-0.5 bg-white border border-slate-300 rounded text-center text-xs font-bold" />
                     </div>
-                    <button type="submit" className="px-4 py-1.5 bg-indigo-650 hover:bg-indigo-600 text-white rounded text-xs font-black shadow-sm">Save Batch Prices</button>
+                    <button type="submit" className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-600 text-white rounded text-xs font-black shadow-sm">Save Batch Prices</button>
                   </div>
                 </form>
               </div>
@@ -973,7 +973,7 @@ function Products() {
           {activeTab === 'barcodes' && (
             <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
               <div>
-                <span className="text-xs font-black uppercase text-indigo-650 tracking-wider block">Variant / Secondary Barcodes</span>
+                <span className="text-xs font-black uppercase text-indigo-600 tracking-wider block">Variant / Secondary Barcodes</span>
                 <p className="text-xs text-slate-400 mt-1">Add multiple barcode mappings for this product so scanning any of them maps back to this item</p>
               </div>
               
@@ -1025,7 +1025,7 @@ function Products() {
                     />
                     <button
                       type="submit"
-                      className="px-4 py-1.5 bg-indigo-650 hover:bg-indigo-600 text-white text-xs font-black rounded-xl shadow-sm shrink-0"
+                      className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-600 text-white text-xs font-black rounded-xl shadow-sm shrink-0"
                     >
                       Add Barcode
                     </button>
@@ -1039,7 +1039,7 @@ function Products() {
           {/* Tab 4: Product Ledger */}
           {activeTab === 'ledger' && (
             <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-              <span className="text-xs font-black uppercase text-indigo-650 tracking-wider block border-b border-slate-100 pb-2">Stock Ledger & Adjustments History</span>
+              <span className="text-xs font-black uppercase text-indigo-600 tracking-wider block border-b border-slate-100 pb-2">Stock Ledger & Adjustments History</span>
               
               <table className="w-full text-xs text-left">
                 <thead>
@@ -1173,7 +1173,7 @@ function BatchPricingRow({ batch, onUpdate }) {
             <button
               type="button"
               onClick={() => onUpdate(qty, purchase, mrpVal, selling)}
-              className="p-1.5 hover:bg-indigo-650 bg-indigo-600 text-white rounded shadow-sm transition-colors"
+              className="p-1.5 hover:bg-indigo-600 bg-indigo-600 text-white rounded shadow-sm transition-colors"
               title="Save batch pricing changes"
             >
               <Save size={12} />
