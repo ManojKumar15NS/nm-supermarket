@@ -582,7 +582,18 @@ function App() {
       {/* POS Top Bar */}
       <header className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0 shadow-sm">
         <div className="flex items-center gap-4">
-          <span className="font-extrabold text-indigo-600">NM POS DESK</span>
+          <span
+            className={`font-extrabold text-indigo-600 ${operator && operator.role === 'ADMIN' ? 'cursor-pointer hover:underline' : ''}`}
+            onClick={() => {
+              if (operator && operator.role === 'ADMIN') {
+                const adminUrl = window.location.origin.replace('-pos', '-admin').replace('3001', '3000');
+                window.location.href = adminUrl;
+              }
+            }}
+            title={operator && operator.role === 'ADMIN' ? "Go to Admin Dashboard" : ""}
+          >
+            NM POS DESK
+          </span>
           {/* Radio toggle walkin vs delivery */}
           <div className="flex items-center gap-3 text-xs font-bold text-slate-600">
             <label className="flex items-center gap-1 cursor-pointer">
@@ -1211,7 +1222,7 @@ function App() {
               <button
                 type="button"
                 onClick={handleConfirmedCheckout}
-                className="flex-1 py-2 bg-indigo-650 hover:bg-indigo-600 text-white rounded-xl text-xs font-black shadow-md"
+                className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-600 text-white rounded-xl text-xs font-black shadow-md"
               >
                 Yes, Checkout
               </button>
