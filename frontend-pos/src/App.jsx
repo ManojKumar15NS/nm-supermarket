@@ -117,9 +117,15 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const queryToken = urlParams.get('token');
+    const queryAdminUrl = urlParams.get('adminUrl');
+    if (queryAdminUrl) {
+      localStorage.setItem('adminUrl', queryAdminUrl);
+    }
     if (queryToken) {
       localStorage.setItem('token', queryToken);
       setToken(queryToken);
+    }
+    if (queryToken || queryAdminUrl) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
@@ -678,8 +684,8 @@ function App() {
             className={`font-extrabold text-indigo-600 ${operator && operator.role === 'ADMIN' ? 'cursor-pointer hover:underline' : ''}`}
             onClick={() => {
               if (operator && operator.role === 'ADMIN') {
-                const adminUrl = window.location.origin.replace('-pos', '-admin').replace('3001', '3000');
-                window.location.href = adminUrl;
+                const savedAdminUrl = localStorage.getItem('adminUrl') || window.location.origin.replace('-pos', '-admin').replace('3001', '3000');
+                window.location.href = savedAdminUrl;
               }
             }}
             title={operator && operator.role === 'ADMIN' ? "Go to Admin Dashboard" : ""}

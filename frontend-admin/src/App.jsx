@@ -44,7 +44,11 @@ function App() {
     const baseUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
       ? 'http://localhost:3001'
       : 'https://nm-pos-inky.vercel.app';
-    return authToken ? `${baseUrl}/?token=${authToken}` : baseUrl;
+    const adminUrl = window.location.origin;
+    if (authToken) {
+      return `${baseUrl}/?token=${authToken}&adminUrl=${encodeURIComponent(adminUrl)}`;
+    }
+    return `${baseUrl}/?adminUrl=${encodeURIComponent(adminUrl)}`;
   };
   const [user, setUser] = useState(null);
   
