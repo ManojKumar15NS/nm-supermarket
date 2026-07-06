@@ -5,7 +5,10 @@ import { RefreshCw, ZoomIn, ZoomOut, Download, Award, UserCheck, AlertTriangle, 
 
 function Dashboard() {
   const todayStr = new Date().toISOString().split('T')[0];
-  const [startDate, setStartDate] = useState(todayStr);
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+  const [startDate, setStartDate] = useState(thirtyDaysAgoStr);
   const [endDate, setEndDate] = useState(todayStr);
   
   // Dedicated chart date pickers
@@ -24,8 +27,10 @@ function Dashboard() {
   const fetchStats = async () => {
     setLoading(true);
     try {
+      const startLocal = new Date(startDate + 'T00:00:00').toISOString();
+      const endLocal = new Date(endDate + 'T23:59:59.999').toISOString();
       const res = await axios.get('/api/dashboard/stats', {
-        params: { startDate, endDate, locationId: location !== 'All Locations' ? location : undefined, channel: channel !== 'All Channels' ? channel : undefined }
+        params: { startDate: startLocal, endDate: endLocal, locationId: location !== 'All Locations' ? location : undefined, channel: channel !== 'All Channels' ? channel : undefined }
       });
       setStats(res.data);
       setLastSynced(new Date().toLocaleTimeString());

@@ -944,13 +944,7 @@ function App() {
                 <div
                   className="cursor-pointer hover:underline flex-1"
                   onClick={() => {
-                    setRefundInvoice(lastBilledInvoice);
-                    const qtys = {};
-                    lastBilledInvoice.items.forEach(item => {
-                      qtys[item.product.id] = 0;
-                    });
-                    setRefundQuantities(qtys);
-                    setShowRefundModal(true);
+                    setInvoiceResponse(lastBilledInvoice);
                   }}
                 >
                   <span className="text-[9px] uppercase tracking-wider text-indigo-500 font-black block">Last Billed (Click to Refund)</span>
