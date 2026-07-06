@@ -107,7 +107,7 @@ function App() {
               <SidebarLink to="/admin/crm" icon={<HeartHandshake size={18} />} label="CRM" />
               <SidebarLink to="/admin/audit-log" icon={<Activity size={18} />} label="Utilities" />
               <SidebarLink to="/admin/reports" icon={<FileText size={18} />} label="Report" />
-              <SidebarLink to="/admin/settings/loyalty" icon={<Settings size={18} />} label="Settings" />
+              <SidebarLink to="/admin/settings/loyalty" icon={<Settings size={18} />} label="Loyalty Program" />
             </nav>
           </div>
           

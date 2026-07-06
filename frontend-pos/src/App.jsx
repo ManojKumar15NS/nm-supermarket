@@ -435,6 +435,9 @@ function App() {
   // Customer Search & Inline add
   const handleCustomerSearchChange = async (val) => {
     setCustomerSearchInput(val);
+    if (selectedCustomer) {
+      setSelectedCustomer(null);
+    }
     if (!val) {
       setCustomerSuggestions([]);
       return;
@@ -448,7 +451,7 @@ function App() {
   };
   const handleSelectCustomer = (cust) => {
     setSelectedCustomer(cust);
-    setCustomerSearchInput(cust.name);
+    setCustomerSearchInput(`${cust.name} (${cust.phone})`);
     setCustomerSuggestions([]);
   };
   const handleInlineCustomerAdd = async () => {
@@ -773,15 +776,30 @@ function App() {
         {/* Field 2: Customer Selector with Inline Quick-Add */}
         <div className="relative">
           <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Customer Selector</label>
-          <input
-            type="text"
-            value={customerSearchInput}
-            onChange={e => handleCustomerSearchChange(e.target.value)}
-            onFocus={() => setShowCustomerDropdown(true)}
-            onBlur={() => setTimeout(() => setShowCustomerDropdown(false), 200)}
-            placeholder="Search phone number..."
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-indigo-500"
-          />
+          <div className="relative flex items-center w-full">
+            <input
+              type="text"
+              value={customerSearchInput}
+              onChange={e => handleCustomerSearchChange(e.target.value)}
+              onFocus={() => setShowCustomerDropdown(true)}
+              onBlur={() => setTimeout(() => setShowCustomerDropdown(false), 200)}
+              placeholder="Search phone number..."
+              className="w-full pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-indigo-500 font-semibold"
+            />
+            {selectedCustomer && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCustomer(null);
+                  setCustomerSearchInput("");
+                  setCustomerSuggestions([]);
+                }}
+                className="absolute right-2.5 text-slate-400 hover:text-slate-700 text-sm font-bold"
+              >
+                ×
+              </button>
+            )}
+          </div>
           {showCustomerDropdown && customerSuggestions.length > 0 && (
             <div className="absolute top-14 left-0 right-0 z-20 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden text-xs">
               {customerSuggestions.map(c => (
@@ -1612,7 +1630,7 @@ function App() {
               <div className="border-t border-b border-dashed border-slate-300 py-2 space-y-1 text-[10px] text-slate-700">
                 <p>Invoice: {invoiceResponse.invoiceNumber}</p>
                 <p>Date: {new Date(invoiceResponse.createdAt).toLocaleString()}</p>
-                <p>Customer: {invoiceResponse.customer?.name} ({invoiceResponse.customer?.phone})</p>
+                <p>Customer: {invoiceResponse.customer ? `${invoiceResponse.customer.name} (${invoiceResponse.customer.phone})` : "Walk-In Customer"}</p>
                 <p>Cashier: {invoiceResponse.staff?.name}</p>
               </div>
               <table className="w-full text-[10px]">
@@ -1624,7 +1642,7 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {invoiceResponse.items?.map((it, idx) => (
+                  {(invoiceResponse.items || invoiceResponse.invoiceItems)?.map((it, idx) => (
                     <tr key={idx}>
                       <td className="py-1">{it.product?.name || `Product ID: ${it.productId}`}</td>
                       <td className="py-1 text-center">{it.qty}</td>
@@ -1677,7 +1695,7 @@ function App() {
               <div className="border border-slate-250 pt-2 text-[9px] space-y-1 text-center bg-slate-50 p-2 rounded">
                 <p className="font-bold text-amber-800">LOYALTY SUMMARY</p>
                 <p>Earned: +{invoiceResponse.loyaltyPointsEarned} pts | Redeemed: -{invoiceResponse.loyaltyPointsRedeemed} pts</p>
-                <p>Current Loyalty Balance: {invoiceResponse.customer?.loyaltyPoints} points</p>
+                <p>Current Loyalty Balance: {invoiceResponse.customer ? invoiceResponse.customer.loyaltyPoints : 0} points</p>
               </div>
               <div className="text-center pt-3 border-t border-dashed border-slate-300 text-[9px] space-y-1 text-slate-500">
                 <p className="font-bold">Thank You for Shopping!</p>
