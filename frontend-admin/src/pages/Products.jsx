@@ -32,6 +32,8 @@ function Products() {
   const [newBrandName, setNewBrandName] = useState('');
   const [selectedSubBrand, setSelectedSubBrand] = useState('');
   const [newSubBrandName, setNewSubBrandName] = useState('');
+  const [subCategory, setSubCategory] = useState('');
+  const [subBrand, setSubBrand] = useState('');
   const [unit, setUnit] = useState('PCS');
   const [hsnCode, setHsnCode] = useState('');
   const [purchaseTaxPct, setPurchaseTaxPct] = useState('18');

@@ -129,18 +129,18 @@ function Dashboard() {
         
         {/* Light Blue Row */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <KpiTile title="Total Purchase" value={`₹${(kpis.stockValue * 0.8).toLocaleString()}`} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
-          <KpiTile title="Total Bills" value={Math.round(kpis.totalInvoices * 0.6)} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
-          <KpiTile title="Purchase Qty" value={Math.round(kpis.soldQty * 1.2)} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
-          <KpiTile title="Total Suppliers" value={2} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
-          <KpiTile title="To Pay" value="₹12,400" colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
-          <KpiTile title="Total Purchase Return" value="₹0" colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
+          <KpiTile title="Total Purchase" value={`₹${(kpis.totalPurchase || 0).toLocaleString()}`} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
+          <KpiTile title="Total Bills" value={kpis.totalPurchaseBills || 0} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
+          <KpiTile title="Purchase Qty" value={kpis.purchaseQty || 0} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
+          <KpiTile title="Total Suppliers" value={kpis.totalSuppliers || 0} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
+          <KpiTile title="To Pay" value={`₹${(kpis.toPay || 0).toLocaleString()}`} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
+          <KpiTile title="Total Purchase Return" value={`₹${(kpis.totalPurchaseReturn || 0).toLocaleString()}`} colorClass="bg-sky-50 border-sky-200 text-sky-800" labelColor="text-sky-500" />
         </div>
         
         {/* Purple Row */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <KpiTile title="Total Paid" value={`₹${kpis.totalSales.toLocaleString()}`} colorClass="bg-purple-50 border-purple-200 text-purple-800" labelColor="text-purple-500" />
-          <KpiTile title="Total Expense" value="₹4,500" colorClass="bg-purple-50 border-purple-200 text-purple-800" labelColor="text-purple-500" />
+          <KpiTile title="Total Expense" value={`₹${(kpis.totalExpense || 0).toLocaleString()}`} colorClass="bg-purple-50 border-purple-200 text-purple-800" labelColor="text-purple-500" />
           <KpiTile title="Total Products" value={kpis.totalProducts} colorClass="bg-purple-50 border-purple-200 text-purple-800" labelColor="text-purple-500" />
           <KpiTile title="Stock Qty" value={kpis.stockQty} colorClass="bg-purple-50 border-purple-200 text-purple-800" labelColor="text-purple-500" />
           <KpiTile title="Stock Value" value={`₹${kpis.stockValue.toLocaleString()}`} colorClass="bg-purple-50 border-purple-200 text-purple-800" labelColor="text-purple-500" />

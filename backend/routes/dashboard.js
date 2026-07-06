@@ -74,6 +74,28 @@ router.get('/stats', authenticateToken, async (req, res) => {
     creditPayments.forEach(p => creditSales += p.amount);
     toReceive += creditSales;
     
+    // Real Purchase statistics calculations
+    const purchaseLedgers = await prisma.stockLedger.findMany({
+      where: {
+        type: 'PURCHASE',
+        timestamp: { gte: start, lte: end }
+      },
+      include: { product: true }
+    });
+    let totalPurchase = 0;
+    let purchaseQty = 0;
+    purchaseLedgers.forEach(l => {
+      const price = l.product ? l.product.purchasePrice : 0;
+      totalPurchase += l.quantity * price;
+      purchaseQty += l.quantity;
+    });
+    const uniquePurchaseBills = new Set(purchaseLedgers.map(l => l.referenceId || 'PO-DEFAULT'));
+    const totalPurchaseBills = uniquePurchaseBills.size;
+
+    const totalSuppliers = await prisma.supplier.count();
+    const suppliers = await prisma.supplier.findMany();
+    const toPay = suppliers.reduce((acc, s) => acc + (s.openingBalance || 0), 0);
+
     const totalCustomers = customers.length;
     const totalProducts = await prisma.product.count({ where: { status: 'ACTIVE' } });
     
@@ -292,7 +314,14 @@ router.get('/stats', authenticateToken, async (req, res) => {
         grossProfit: grossProfit / 100,
         avgProfitMarginPct: totalSales > 0 ? Math.round((grossProfit / totalSales) * 100) : 0,
         avgCartValue: avgCartValue / 100,
-        avgBillsPerDay: Math.round(invoices.length / Math.max(1, (end - start) / (1000*60*60*24)))
+        avgBillsPerDay: Math.round(invoices.length / Math.max(1, (end - start) / (1000*60*60*24))),
+        totalPurchase: totalPurchase / 100,
+        totalPurchaseBills,
+        purchaseQty,
+        totalSuppliers,
+        toPay: toPay / 100,
+        totalPurchaseReturn: 0,
+        totalExpense: 0
       },
       customerSegmentation: {
         vip: vipCount,

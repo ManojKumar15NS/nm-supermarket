@@ -228,17 +228,16 @@ function App() {
         setSmartProductInput('');
         setProductSuggestions([]);
       } else {
-        if (confirm(`Product barcode "${val}" not found in inventory. Add to inventory now?`)) {
-          setQuickAddBarcode(val);
-          setQuickAddName('');
-          setQuickAddCategory('');
-          setQuickAddBrand('');
-          setQuickAddMrp('');
-          setQuickAddPurchase('');
-          setQuickAddSelling('');
-          setQuickAddQty('100');
-          setShowQuickAddModal(true);
-        }
+        setQuickAddBarcode(val);
+        setQuickAddName('');
+        setQuickAddCategory('');
+        setQuickAddBrand('');
+        setQuickAddMrp('');
+        setQuickAddPurchase('');
+        setQuickAddSelling('');
+        setQuickAddQty('100');
+        setShowQuickAddModal(true);
+        setProductSuggestions([]);
       }
     }
   };
@@ -384,6 +383,15 @@ function App() {
         }
       }
     });
+    const exactMatch = products.find(p => p.itemCode === val || (p.variants && p.variants.some(v => v.barcode === val)));
+    if (!exactMatch && val.length >= 2) {
+      filtered.push({
+        id: 'QUICK_ADD_SPECIAL',
+        name: `+ Barcode "${val}" not found. Click to Quick Add`,
+        itemCode: val,
+        isSpecialQuickAdd: true
+      });
+    }
     setProductSuggestions(filtered.slice(0, 8));
   };
   const addToCart = (product) => {
@@ -725,18 +733,38 @@ function App() {
             <div className="absolute top-14 left-0 right-0 z-20 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden">
               {productSuggestions.map(p => (
                 <div
-                  key={p.selectedBatch ? `${p.id}-${p.selectedBatch.id}` : p.id}
+                  key={p.id}
                   onClick={() => {
-                    if (p.selectedBatch) {
+                    if (p.isSpecialQuickAdd) {
+                      setQuickAddBarcode(p.itemCode);
+                      setQuickAddName('');
+                      setQuickAddCategory('');
+                      setQuickAddBrand('');
+                      setQuickAddMrp('');
+                      setQuickAddPurchase('');
+                      setQuickAddSelling('');
+                      setQuickAddQty('100');
+                      setShowQuickAddModal(true);
+                      setProductSuggestions([]);
+                    } else if (p.selectedBatch) {
                       addBatchToCart(p, p.selectedBatch);
                     } else {
                       addToCart(p);
                     }
                   }}
-                  className="p-2.5 hover:bg-slate-50 border-b border-slate-100 cursor-pointer flex justify-between text-xs animate-fade-in"
+                  className={`p-2.5 border-b border-slate-100 cursor-pointer flex justify-between text-xs animate-fade-in ${p.isSpecialQuickAdd ? 'bg-indigo-50 hover:bg-indigo-100' : 'hover:bg-slate-50'}`}
                 >
-                  <span className="font-semibold text-slate-700">{p.displayName}</span>
-                  <span className="text-slate-400 font-bold">Stock: {p.displayQty}</span>
+                  {p.isSpecialQuickAdd ? (
+                    <div className="flex-1 flex items-center justify-between py-1">
+                      <span className="font-extrabold text-indigo-700 text-xs">{p.name}</span>
+                      <span className="px-2 py-0.5 bg-indigo-600 text-white rounded text-[9px] font-black uppercase">Quick Add</span>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="font-semibold text-slate-700">{p.displayName}</span>
+                      <span className="text-slate-400 font-bold">Stock: {p.displayQty}</span>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
