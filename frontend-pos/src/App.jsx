@@ -737,7 +737,8 @@ function App() {
               {productSuggestions.map(p => (
                 <div
                   key={p.id}
-                  onClick={() => {
+                  onMouseDown={(e) => {
+                    e.preventDefault();
                     if (p.isSpecialQuickAdd) {
                       setQuickAddBarcode(p.itemCode);
                       setQuickAddName('');
@@ -805,7 +806,10 @@ function App() {
               {customerSuggestions.map(c => (
                 <div
                   key={c.id}
-                  onClick={() => handleSelectCustomer(c)}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleSelectCustomer(c);
+                  }}
                   className="p-2.5 hover:bg-slate-50 border-b border-slate-100 cursor-pointer flex justify-between"
                 >
                   <span className="font-semibold text-slate-700">{c.name}</span>
@@ -1067,15 +1071,9 @@ function App() {
                       {recentInvoices.map(inv => (
                         <div key={inv.id} className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center text-xs">
                           <div
-                            className="flex-1 cursor-pointer hover:underline"
+                            className="flex-1 cursor-pointer hover:underline animate-fade-in"
                             onClick={() => {
-                              setRefundInvoice(inv);
-                              const qtys = {};
-                              inv.items.forEach(item => {
-                                qtys[item.product.id] = 0;
-                              });
-                              setRefundQuantities(qtys);
-                              setShowRefundModal(true);
+                              setInvoiceResponse(inv);
                             }}
                           >
                             <strong className="text-[10px] font-mono text-slate-700 block">{inv.invoiceNumber}</strong>
@@ -1709,6 +1707,23 @@ function App() {
             >
               <Printer size={14} />
               Print Receipt
+            </button>
+            <button
+              onClick={() => {
+                setRefundInvoice(invoiceResponse);
+                const qtys = {};
+                (invoiceResponse.items || invoiceResponse.invoiceItems || []).forEach(item => {
+                  if (item.product) {
+                    qtys[item.product.id] = 0;
+                  }
+                });
+                setRefundQuantities(qtys);
+                setShowRefundModal(true);
+                setInvoiceResponse(null);
+              }}
+              className="mt-2 w-full py-2 bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs rounded-lg flex items-center justify-center gap-1.5 print:hidden uppercase tracking-wider transition-all"
+            >
+              Take Refund / Return
             </button>
           </div>
         </div>
