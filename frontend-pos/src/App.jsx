@@ -1006,20 +1006,40 @@ function App() {
                     <p className="text-[10px] text-slate-400 text-center py-2">No customer profile linked. Proceeding as Walk-In customer checkout.</p>
                   )}
                 </div>
+                {/* Shift Reconcile Button */}
                 <div className="space-y-2">
-                  <button onClick={handleHoldBill} className="w-full py-2 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200 text-xs font-bold text-slate-750 transition-colors">Hold Bill</button>
-                  <button onClick={triggerMultiplePay} className="w-full py-2 bg-indigo-50 hover:bg-indigo-100 rounded border border-indigo-200 text-xs font-bold text-indigo-750 transition-colors">Payments</button>
-                  <div className="p-2 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between text-xs">
-                    <span className="text-[10px] font-bold text-slate-400">Redeem Loyalty Pts</span>
-                    <input
-                      type="number"
-                      value={loyaltyPointsRedeem}
-                      onChange={e => setLoyaltyPointsRedeem(e.target.value)}
-                      className="w-20 px-2 py-0.5 bg-white border border-slate-200 rounded text-center text-slate-700 text-xs font-bold"
-                    />
-                  </div>
-                  <button onClick={() => setCheckoutModal(true)} className="w-full py-2 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200 text-xs font-bold text-slate-700 transition-colors">Add Payment</button>
-                  <button onClick={() => setShowShiftModal(true)} className="w-full py-2 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200 text-xs font-bold text-slate-700 transition-colors">Cash Control</button>
+                  <button onClick={() => setShowShiftModal(true)} className="w-full py-2 bg-indigo-50 hover:bg-indigo-100 rounded border border-indigo-200 text-xs font-bold text-indigo-750 transition-colors">Shift Cash Control</button>
+                </div>
+                {/* Permanent History Display: Last 10 Bills */}
+                <div className="pt-2 border-t border-slate-200 space-y-2">
+                  <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">Recent Orders (Last 10 Bills)</span>
+                  {recentInvoices.length === 0 ? (
+                    <p className="text-[10px] text-slate-400 text-center py-2 bg-slate-50 border border-dashed rounded-lg">No recent sales</p>
+                  ) : (
+                    <div className="space-y-1.5 max-h-[30vh] overflow-y-auto pr-1">
+                      {recentInvoices.slice(0, 10).map(inv => (
+                        <div key={inv.id} className="p-2 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center text-xs">
+                          <div
+                            className="flex-1 cursor-pointer hover:underline"
+                            onClick={() => {
+                              setInvoiceResponse(inv);
+                            }}
+                          >
+                            <strong className="text-[10px] font-mono text-slate-700 block">{inv.invoiceNumber}</strong>
+                            <span className="text-[9px] text-indigo-650 font-bold block">Total: ₹{(inv.grandTotal / 100).toFixed(2)} (Refund)</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setInvoiceResponse(inv)}
+                            className="p-1 hover:bg-slate-200 border border-slate-300 rounded text-slate-600 shrink-0"
+                            title="Reprint Receipt"
+                          >
+                            <Printer size={12} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -1164,50 +1184,8 @@ function App() {
           </div>
         </div>
       </div>
-      {/* Bottom Payment Button Grid - Ultra compact single row layout */}
-      <div className="p-3 bg-slate-200 border-t border-slate-300 shrink-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs font-bold text-center select-none">
-        <button
-          onClick={triggerCashQuick}
-          className="py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-xs font-black">Cash (F4)</span>
-          <span className="text-[8px] text-emerald-100 font-medium">Quick Checkout</span>
-        </button>
-        <button
-          onClick={triggerUpiQuick}
-          className="py-2.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-xs font-black">UPI (F5)</span>
-          <span className="text-[8px] text-sky-100 font-medium">GooglePay, PhonePe</span>
-        </button>
-        <button
-          onClick={triggerCardQuick}
-          className="py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-xs font-black">Card (F3)</span>
-          <span className="text-[8px] text-sky-100 font-medium">POS Terminal</span>
-        </button>
-        <button
-          onClick={triggerPayLater}
-          className="py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-xs font-black">Pay Later (F11)</span>
-          <span className="text-[8px] text-slate-300 font-medium">Store Credit</span>
-        </button>
-        <button
-          onClick={handleHoldBill}
-          className="py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-xs font-black">Hold Bill (F6)</span>
-          <span className="text-[8px] text-amber-100 font-medium">Park Invoice</span>
-        </button>
-        <button
-          onClick={triggerHoldPrint}
-          className="py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-805 border border-amber-300 rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-xs font-black text-amber-800">Hold & Print (F7)</span>
-          <span className="text-[8px] text-amber-600 font-medium">Park & Print</span>
-        </button>
+      {/* Bottom Payment Button Grid - Ultra compact reversed single row layout */}
+      <div className="p-3 bg-slate-200 border-t border-slate-300 shrink-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs font-bold text-center select-none animate-fade-in">
         {/* Coupon Input Block in Grid */}
         <div className="flex border border-slate-300 rounded-xl bg-white overflow-hidden shadow-sm h-10">
           <div className="flex-1 flex flex-col justify-center px-2.5">
@@ -1227,6 +1205,48 @@ function App() {
             Apply
           </button>
         </div>
+        <button
+          onClick={triggerHoldPrint}
+          className="py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-855 border border-amber-300 rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
+        >
+          <span className="text-xs font-black text-amber-800">Hold & Print (F7)</span>
+          <span className="text-[8px] text-amber-600 font-medium">Park & Print</span>
+        </button>
+        <button
+          onClick={handleHoldBill}
+          className="py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
+        >
+          <span className="text-xs font-black">Hold Bill (F6)</span>
+          <span className="text-[8px] text-amber-100 font-medium">Park Invoice</span>
+        </button>
+        <button
+          onClick={triggerPayLater}
+          className="py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
+        >
+          <span className="text-xs font-black">Pay Later (F11)</span>
+          <span className="text-[8px] text-slate-300 font-medium">Store Credit</span>
+        </button>
+        <button
+          onClick={triggerCardQuick}
+          className="py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
+        >
+          <span className="text-xs font-black">Card (F3)</span>
+          <span className="text-[8px] text-sky-100 font-medium">POS Terminal</span>
+        </button>
+        <button
+          onClick={triggerUpiQuick}
+          className="py-2.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
+        >
+          <span className="text-xs font-black">UPI (F5)</span>
+          <span className="text-[8px] text-sky-100 font-medium">GooglePay, PhonePe</span>
+        </button>
+        <button
+          onClick={triggerCashQuick}
+          className="py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
+        >
+          <span className="text-xs font-black">Cash (F4)</span>
+          <span className="text-[8px] text-emerald-100 font-medium">Quick Checkout</span>
+        </button>
       </div>
       {/* Return / Refund Modal */}
       {showRefundModal && refundInvoice && (
