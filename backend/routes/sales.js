@@ -159,6 +159,7 @@ router.post('/checkout', authenticateToken, checkPermission('POS/Billing', 'add'
     let subtotal = 0;
     let itemDiscount = 0;
     let taxAmount = 0;
+    let itemsNetTotal = 0;
     
     const invoiceItemsData = [];
     const stockLedgerActions = [];
@@ -193,6 +194,9 @@ router.post('/checkout', authenticateToken, checkPermission('POS/Billing', 'add'
       itemDiscount += discTotal;
       taxAmount += itemTax;
       
+      const netAmount = taxableVal + (dbProduct.isTaxInclusive ? 0 : itemTax);
+      itemsNetTotal += netAmount;
+      
       invoiceItemsData.push({
         productId: dbProduct.id,
         variantId: item.variantId ? parseInt(item.variantId) : null,
@@ -202,7 +206,7 @@ router.post('/checkout', authenticateToken, checkPermission('POS/Billing', 'add'
         discount: discTotal,
         taxPct: taxRate,
         taxAmount: itemTax,
-        netAmount: taxableVal + (dbProduct.isTaxInclusive ? 0 : itemTax)
+        netAmount
       });
       
       // Stock Updates
@@ -251,8 +255,7 @@ router.post('/checkout', authenticateToken, checkPermission('POS/Billing', 'add'
       loyaltyDiscountPaise = pointsToRedeem * loyaltySettings.redemptionRate;
     }
     
-    const totalDeductions = itemDiscount + couponDiscount + loyaltyDiscountPaise;
-    const finalGrandTotal = Math.max(0, subtotal + parseInt(shippingCharges || 0) - totalDeductions + (items.some(i => !i.isTaxInclusive) ? taxAmount : 0));
+    const finalGrandTotal = Math.max(0, itemsNetTotal + parseInt(shippingCharges || 0) - (couponDiscount + loyaltyDiscountPaise));
     
     // Calculate loyalty points earned
     // Earn rate: points per Rupee spent. e.g. 0.01 = 1 point per 100 Rs
