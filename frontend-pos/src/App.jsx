@@ -191,7 +191,7 @@ function App() {
       setShowShiftModal(false);
       fetchProducts();
     } catch (err) {
-      alert('Failed to open shift');
+      alert('Failed to open shift: ' + (err.response?.data?.error || err.message));
     }
   };
   const handleProcessRefund = async () => {
@@ -1516,16 +1516,25 @@ function App() {
       )}
       {/* 1. Add Cash Opening Shift Modal */}
       {showShiftModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur flex items-center justify-center p-4">
-          <div className="w-full max-w-sm bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 space-y-4">
+        <div className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur flex items-center justify-center p-4 font-sans">
+          <div className="w-full max-w-sm bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 space-y-4 relative">
+            <button
+              onClick={() => setShowShiftModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+            >
+              <X size={20} />
+            </button>
             <h3 className="font-extrabold text-slate-800 text-lg">Cash Register: Open Shift</h3>
             <p className="text-xs text-slate-500">Input starting drawer float amount.</p>
             <form onSubmit={handleOpenShift} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Opening Cash Float (₹)</label>
-                <input type="number" required value={openingCash} onChange={e => setOpeningCash(e.target.value)} className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 text-lg font-bold text-center" />
+                <input type="number" required value={openingCash} onChange={e => setOpeningCash(e.target.value)} className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 text-lg font-bold text-center focus:outline-none focus:border-indigo-500 font-extrabold" />
               </div>
-              <button type="submit" className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg transition-colors">Start Cash Session</button>
+              <div className="flex gap-2">
+                <button type="button" onClick={() => setShowShiftModal(false)} className="w-1/3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-655 border border-slate-200 rounded-lg font-bold text-xs uppercase transition-colors">Cancel</button>
+                <button type="submit" className="w-2/3 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-lg text-xs uppercase transition-colors">Start Session</button>
+              </div>
             </form>
           </div>
         </div>
