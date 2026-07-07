@@ -255,6 +255,7 @@ router.post('/checkout', authenticateToken, checkPermission('POS/Billing', 'add'
       loyaltyDiscountPaise = pointsToRedeem * loyaltySettings.redemptionRate;
     }
     
+    const totalDeductions = itemDiscount + couponDiscount + loyaltyDiscountPaise;
     const finalGrandTotal = Math.max(0, itemsNetTotal + parseInt(shippingCharges || 0) - (couponDiscount + loyaltyDiscountPaise));
     
     // Calculate loyalty points earned
