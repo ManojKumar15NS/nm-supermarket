@@ -1111,52 +1111,50 @@ function App() {
               className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-indigo-500 font-medium"
             />
           </div>
-          {/* Summary Totals Grid (Big Font, High Visibility) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-4 bg-slate-50 border border-slate-200 p-5 rounded-2xl shrink-0 shadow-sm items-center flex-1">
-            <div className="flex flex-col p-2 bg-white rounded-lg border border-slate-100 text-center">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Quantity</span>
-              <strong className="text-lg font-black text-slate-800 mt-1">{totalQty} units</strong>
+          {/* Summary Totals Flex Row (Modern, Highly Responsive layout) */}
+          <div className="flex flex-wrap gap-2 bg-slate-50 border border-slate-200 p-3 rounded-xl shrink-0 shadow-sm items-center justify-start flex-1 select-none">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-slate-100 shadow-sm text-xs">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Qty:</span>
+              <strong className="text-slate-800 font-extrabold">{totalQty} units</strong>
             </div>
-            <div className="flex flex-col p-2 bg-white rounded-lg border border-slate-100 text-center">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">MRP Total</span>
-              <strong className="text-lg font-black text-slate-800 mt-1">₹{(totalMrp / 100).toFixed(2)}</strong>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-slate-100 shadow-sm text-xs">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">MRP Total:</span>
+              <strong className="text-slate-800 font-extrabold">₹{(totalMrp / 100).toFixed(2)}</strong>
             </div>
-            <div className="flex flex-col p-2 bg-white rounded-lg border border-slate-100 text-center">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tax Amount</span>
-              <strong className="text-lg font-black text-slate-800 mt-1">₹{(taxAmount / 100).toFixed(2)}</strong>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-slate-100 shadow-sm text-xs">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Tax:</span>
+              <strong className="text-slate-800 font-extrabold">₹{(taxAmount / 100).toFixed(2)}</strong>
             </div>
-            <div className="flex flex-col p-2 bg-white rounded-lg border border-slate-100 text-center">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Add Charges</span>
+            <div className="flex items-center gap-1.5 px-2.5 py-0.5 bg-white rounded-lg border border-slate-100 shadow-sm text-xs">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Add Charges:</span>
               <input
                 type="number"
                 value={additionalCharges}
                 onChange={e => setDeliveryCharges(e.target.value)}
-                className="w-full mt-1 px-2 py-0.5 bg-slate-50 border border-slate-300 rounded text-center text-sm font-black text-slate-700 focus:outline-none focus:border-indigo-500"
+                className="w-12 px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded font-black text-slate-700 text-xs text-center focus:outline-none focus:border-indigo-500"
               />
             </div>
-            <div className="flex flex-col p-2 bg-white rounded-lg border border-slate-100 text-center">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Discount</span>
-              <strong className="text-lg font-black text-rose-500 mt-1">-₹{(totalDiscount / 100).toFixed(2)}</strong>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-slate-100 shadow-sm text-xs">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Discount:</span>
+              <strong className="text-rose-600 font-extrabold">-₹{(totalDiscount / 100).toFixed(2)}</strong>
             </div>
-            <div className="flex flex-col p-2 bg-white rounded-lg border border-slate-100 text-center">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Flat Disc %</span>
-              <strong className="text-lg font-black text-rose-500 mt-1">{couponInfo ? `${couponInfo.discountValue}%` : '0%'}</strong>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-slate-100 shadow-sm text-xs">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Flat Disc %:</span>
+              <strong className="text-rose-600 font-extrabold">{couponInfo ? `${couponInfo.discountValue}%` : '0%'}</strong>
             </div>
-            <div className="flex flex-col p-2 bg-white rounded-lg border border-slate-100 text-center">
-              <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Round Off</span>
-              <strong className="text-lg font-black text-slate-850 mt-1">₹0.00</strong>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-slate-100 shadow-sm text-xs">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Round Off:</span>
+              <strong className="text-slate-700 font-extrabold">₹0.00</strong>
             </div>
             {/* Earn Loyalty Toggle */}
-            <div className="flex flex-col items-center justify-center p-1 bg-white rounded-lg border border-slate-100 text-center">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Earn Loyalty</span>
-              <label className="flex items-center mt-1.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={earnLoyaltyToggle}
-                  onChange={e => setEarnLoyaltyToggle(e.target.checked)}
-                  className="rounded text-indigo-600 focus:ring-0 h-4 w-4"
-                />
-              </label>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-lg border border-slate-100 shadow-sm text-xs">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Earn Loyalty:</span>
+              <input
+                type="checkbox"
+                checked={earnLoyaltyToggle}
+                onChange={e => setEarnLoyaltyToggle(e.target.checked)}
+                className="rounded text-indigo-600 focus:ring-0 h-4 w-4 cursor-pointer"
+              />
             </div>
           </div>
           {/* Giant Payable Amount Card */}
@@ -1166,107 +1164,69 @@ function App() {
           </div>
         </div>
       </div>
-      {/* Bottom Payment Button Grid - 3 Rows x 4 Columns (Large hardware style) */}
-      <div className="p-4 bg-slate-200 border-t border-slate-300 shrink-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-bold text-center">
-        {/* Row 1 */}
+      {/* Bottom Payment Button Grid - Ultra compact single row layout */}
+      <div className="p-3 bg-slate-200 border-t border-slate-300 shrink-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs font-bold text-center select-none">
         <button
-          onClick={triggerMultiplePay}
-          className="py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
+          onClick={triggerCashQuick}
+          className="py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
         >
-          <span className="text-sm font-black">Multiple Pay (F12)</span>
-          <span className="text-[9px] text-indigo-200 font-medium">Split cash/card/UPI</span>
+          <span className="text-xs font-black">Cash (F4)</span>
+          <span className="text-[8px] text-emerald-100 font-medium">Quick Checkout</span>
+        </button>
+        <button
+          onClick={triggerUpiQuick}
+          className="py-2.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
+        >
+          <span className="text-xs font-black">UPI (F5)</span>
+          <span className="text-[8px] text-sky-100 font-medium">GooglePay, PhonePe</span>
+        </button>
+        <button
+          onClick={triggerCardQuick}
+          className="py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
+        >
+          <span className="text-xs font-black">Card (F3)</span>
+          <span className="text-[8px] text-sky-100 font-medium">POS Terminal</span>
         </button>
         <button
           onClick={triggerPayLater}
-          className="py-4 bg-slate-700 hover:bg-slate-800 text-white rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
+          className="py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
         >
-          <span className="text-sm font-black">Redeem Credit</span>
-          <span className="text-[9px] text-slate-300 font-medium">Deduct ledger limit</span>
+          <span className="text-xs font-black">Pay Later (F11)</span>
+          <span className="text-[8px] text-slate-300 font-medium">Store Credit</span>
         </button>
         <button
           onClick={handleHoldBill}
-          className="py-4 bg-amber-500 hover:bg-amber-600 text-white rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
+          className="py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
         >
-          <span className="text-sm font-black">Hold Bill (F6)</span>
-          <span className="text-[9px] text-amber-100 font-medium">Park invoice active state</span>
+          <span className="text-xs font-black">Hold Bill (F6)</span>
+          <span className="text-[8px] text-amber-100 font-medium">Park Invoice</span>
+        </button>
+        <button
+          onClick={triggerHoldPrint}
+          className="py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-805 border border-amber-300 rounded-xl shadow-sm transition-all flex flex-col justify-center items-center gap-0.5"
+        >
+          <span className="text-xs font-black text-amber-800">Hold & Print (F7)</span>
+          <span className="text-[8px] text-amber-600 font-medium">Park & Print</span>
         </button>
         {/* Coupon Input Block in Grid */}
-        <div className="flex border border-slate-300 rounded-xl bg-white overflow-hidden shadow-md">
-          <div className="flex-1 flex flex-col justify-center px-3">
-            <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider text-left">Coupon Discount Code</span>
+        <div className="flex border border-slate-300 rounded-xl bg-white overflow-hidden shadow-sm h-10">
+          <div className="flex-1 flex flex-col justify-center px-2.5">
+            <span className="text-[8px] text-slate-400 font-bold uppercase tracking-wider text-left">Coupon Code</span>
             <input
               type="text"
               placeholder="ENTER CODE"
               value={couponCode}
               onChange={e => setCouponCode(e.target.value)}
-              className="w-full text-sm uppercase border-0 focus:ring-0 bg-transparent text-left font-black text-slate-850 p-0"
+              className="w-full text-xs uppercase border-0 focus:ring-0 bg-transparent text-left font-black text-slate-850 p-0 focus:outline-none"
             />
           </div>
           <button
             onClick={handleValidateCoupon}
-            className="px-4 bg-slate-100 border-l border-slate-200 hover:bg-slate-200 text-xs font-black text-slate-700 uppercase"
+            className="px-3 bg-slate-100 border-l border-slate-200 hover:bg-slate-200 text-[10px] font-black text-slate-700 uppercase"
           >
             Apply
           </button>
         </div>
-        {/* Row 2 */}
-        <button
-          onClick={triggerUpiQuick}
-          className="py-4 bg-sky-500 hover:bg-sky-600 text-white rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-sm font-black">UPI (F5)</span>
-          <span className="text-[9px] text-sky-100 font-medium">GooglePay, PhonePe, Paytm</span>
-        </button>
-        <button
-          onClick={triggerCardQuick}
-          className="py-4 bg-sky-550 hover:bg-sky-600 bg-sky-600 text-white rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-sm font-black">Card (F3)</span>
-          <span className="text-[9px] text-sky-100 font-medium">Visa, Mastercard terminal</span>
-        </button>
-        <button
-          onClick={triggerCashQuick}
-          className="py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-sm font-black">Cash (F4)</span>
-          <span className="text-[9px] text-emerald-100 font-medium">Fast cash register checkout</span>
-        </button>
-        <button
-          onClick={triggerPayLater}
-          className="py-4 bg-slate-700 hover:bg-slate-800 text-white rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-sm font-black">Pay Later (F11)</span>
-          <span className="text-[9px] text-slate-300 font-medium">Book as store credit account</span>
-        </button>
-        {/* Row 3 */}
-        <button
-          onClick={triggerHoldPrint}
-          className="py-4 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-sm font-black">Hold & Print (F7)</span>
-          <span className="text-[9px] text-amber-600 font-medium">Park invoice and print receipt</span>
-        </button>
-        <button
-          onClick={triggerUpiPrint}
-          className="py-4 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-300 rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-sm font-black">UPI & Print (F10)</span>
-          <span className="text-[9px] text-sky-600 font-medium">UPI QR scan + printed receipt</span>
-        </button>
-        <button
-          onClick={triggerCardPrint}
-          className="py-4 bg-sky-50 hover:bg-sky-100 text-sky-850 border border-sky-300 rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-sm font-black">Card & Print (F9)</span>
-          <span className="text-[9px] text-sky-600 font-medium">Swipe card + print POS receipt</span>
-        </button>
-        <button
-          onClick={triggerCashPrint}
-          className="py-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl shadow-md transition-all flex flex-col justify-center items-center gap-0.5"
-        >
-          <span className="text-sm font-black">Cash & Print (F8)</span>
-          <span className="text-[9px] text-emerald-600 font-medium">Drawer open + print POS receipt</span>
-        </button>
       </div>
       {/* Return / Refund Modal */}
       {showRefundModal && refundInvoice && (

@@ -398,10 +398,18 @@ router.post('/checkout', authenticateToken, checkPermission('POS/Billing', 'add'
 router.get('/invoices', authenticateToken, async (req, res) => {
   try {
     const list = await prisma.invoice.findMany({
-      include: { customer: true, staff: true, payments: true, items: { include: { product: true } } },
+      include: { customer: true, staff: true, payments: true, invoiceItems: { include: { product: true } } },
       orderBy: { createdAt: 'desc' }
     });
-    res.json(list);
+    const mappedList = list.map(inv => ({
+      ...inv,
+      items: inv.invoiceItems.map(item => ({
+        ...item,
+        quantity: item.qty,
+        price: item.sellingPrice
+      }))
+    }));
+    res.json(mappedList);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -413,10 +421,18 @@ router.get('/invoices/:invoiceNumber', authenticateToken, async (req, res) => {
   try {
     const invoice = await prisma.invoice.findUnique({
       where: { invoiceNumber },
-      include: { customer: true, staff: true, payments: true, items: { include: { product: true } } }
+      include: { customer: true, staff: true, payments: true, invoiceItems: { include: { product: true } } }
     });
     if (!invoice) return res.status(404).json({ error: 'Invoice not found' });
-    res.json(invoice);
+    const mappedInvoice = {
+      ...invoice,
+      items: invoice.invoiceItems.map(item => ({
+        ...item,
+        quantity: item.qty,
+        price: item.sellingPrice
+      }))
+    };
+    res.json(mappedInvoice);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
